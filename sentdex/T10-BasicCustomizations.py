@@ -21,6 +21,14 @@ def bytespdate2num(fmt, encoding='utf-8'):
 
 
 def graph_data():
+
+    fig = plt.figure()              # to modify a figure we need to reference the figure first
+                                    # One subplot added in following line
+    ax1 = plt.subplot2grid((1, 1),  # 1st tuple - shape of the grid -> 1 by 1
+                           (0, 0))  # 2nd typle - starting point of this plot
+    """ As we got ax1 we will plot it and not plt """
+
+
     stock_price_url = 'https://pythonprogramming.net/yahoo_finance_replacement'
     source_code = urllib.request.urlopen(stock_price_url).read().decode()
     stock_data = []
@@ -36,12 +44,22 @@ def graph_data():
                                                                       unpack=True,
                                                                       # converts data to num format for matplotlib
                                                                       converters={0: bytespdate2num('%Y-%m-%d')})
-    plt.plot_date(date, closep, '-', label='Price')
+    ax1.plot_date(date, closep, '-', label='Price')
+    # Rotate label
+    for label in ax1.xaxis.get_ticklabels():
+        label.set_rotation(45)              # tilt angle in brackets but labels are off the screen
+    ax1.grid(True, color='g')                          # adds grid to figure
 
     plt.xlabel('Date')
     plt.ylabel('Price')
     plt.title('Interesting graph')
     plt.legend()
+    plt.subplots_adjust(left=0.09,           # adjust all parameters
+                        bottom=0.20,
+                        right=0.94,
+                        top=0.90,
+                        wspace=0.2,         # wspace and hspace are padding between figures
+                        hspace=0)
     plt.show()
 
 
