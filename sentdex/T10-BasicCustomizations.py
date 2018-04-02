@@ -11,6 +11,7 @@ import urllib
 import matplotlib.dates as mdates
 
 
+""" converts data to num format for matplotlib """
 def bytespdate2num(fmt, encoding='utf-8'):
     strconverter = mdates.strpdate2num(fmt)
 
