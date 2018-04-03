@@ -1,3 +1,11 @@
+""" Source:
+    https://pythonprogramming.net/live-graphs-matplotlib-tutorial/
+    https://www.youtube.com/watch?v=ZmYPzESC5YY&list=PLQVvvaa0QuDfefDfXb9Yf0la1fPDKluPF&index=16
+
+    Tutorial 16:
+    Live graphs
+"""
+
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation        # allow to animate the figure after it has been shown
 from matplotlib import style
