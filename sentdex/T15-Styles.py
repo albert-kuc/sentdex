@@ -1,7 +1,10 @@
 """ Source:
     https://www.youtube.com/watch?v=S5Dn1HjBPA4
+    https://pythonprogramming.net/last-price-stock-chart-matplotlib-tutorial/
 
     Tutorial 15: Styles
+    Tutorial 17: Annotations
+    Tutorial 18: Annotating Last Price Stock Chart
 
     Uses code from T14 but without candlestick, fill between removed for clearance
     Set to plot last 50 values
@@ -56,8 +59,8 @@ def graph_data():
                                                                       # converts data to num format for matplotlib
                                                                       converters={0: bytespdate2num('%Y-%m-%d')})
     """ Plot """
-    ax1.plot_date(date, closep, '-', linewidth=0.5, label='Price')
-    ax1.plot(date, openp, '-', linewidth=0.5, label='Open price')
+    ax1.plot_date(date, closep, '-', linewidth=0.5, label='Close price')
+    ax1.plot_date(date, openp, '-', linewidth=0.5, label='Open price')
 
     """ Fill between for plotting areas below or above certain value in color"""
     # ax1.fill_between(date,
@@ -87,14 +90,25 @@ def graph_data():
     # Fix specified values to Y axis
     # ax1.set_yticks([0, 120, 240, 360, 400, 500, 550, 660, 720])
 
+    """ T17 """
+    ax1.annotate('Bad News!',(date[15],openp[15]),                  # pointed location based on variables
+                 xytext=(.605, .4), textcoords='axes fraction',     # xytexy (Xaxis, Yaxis in percentage
+                 arrowprops=dict(facecolor='grey', color='grey'))   # warning is caused by "color"s property
+
+    """ T18 """
+    bbox_props = dict(boxstyle='round',fc='w', ec='k',lw=1)
+        # below we use positive values because the data plots in backward direction
+    ax1.annotate(str(closep[1]), (date[1], closep[1]),              # 1st the text, 2nd the location
+                 xytext = (date[1]+2.5, closep[1]+0.5), bbox=bbox_props)
+
     """ Plot parameters """
     plt.xlabel('Date')
     plt.ylabel('Price')
     plt.title('Interesting graph')
     plt.legend()
-    plt.subplots_adjust(left=0.09,           # adjust all parameters
-                        bottom=0.20,
-                        right=0.94,
+    plt.subplots_adjust(left=0.11,           # adjust all parameters
+                        bottom=0.24,
+                        right=0.92,
                         top=0.90,
                         wspace=0.2,         # wspace and hspace are padding between figures
                         hspace=0)
