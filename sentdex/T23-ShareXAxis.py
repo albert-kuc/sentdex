@@ -49,9 +49,9 @@ def graph_data(stock):
     ax1 = plt.subplot2grid((6,1), (0,0), rowspan=1, colspan=1)
     plt.title(stock)
     plt.ylabel('H-L')
-    ax2 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1)
+    ax2 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1, sharex=ax1)
     plt.ylabel('Price')
-    ax3 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1)
+    ax3 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1, sharex=ax1)
     plt.ylabel('MAvgs')
 
 
@@ -66,7 +66,7 @@ def graph_data(stock):
                 stock_data.append(line)
 
     """ Copy values from stock_data tuple to variables """
-    date, openp, highp, lowp, closep, adj_closep, volume = np.loadtxt(stock_data[:500],
+    date, openp, highp, lowp, closep, adj_closep, volume = np.loadtxt(stock_data[:400],
                                                                       # stock_data for last 50 values
                                                                       delimiter=',',
                                                                       unpack=True,
@@ -80,12 +80,15 @@ def graph_data(stock):
 
     h_1 = list(map(high_minus_low, highp, lowp))
 
-    ax1.plot_date(date, h_1, '-')
-    ax1.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, prune='lower'))
+    ax1.plot_date(date[-start:], h_1[-start:], '-')
+    ax1.yaxis.set_major_locator(mticker.MaxNLocator(nbins=4, prune='lower'))
 
     """ Plot ax2"""
-    ax2.plot_date(date, closep, '-', linewidth=0.5, label='Close price')
-    ax2.plot_date(date, openp, '-', linewidth=0.5, label='Open price')
+    ax2.plot_date(date[-start:], closep[-start:], '-', linewidth=0.5, label='Close price')
+    ax2.plot_date(date[-start:], openp[-start:], '-', linewidth=0.5, label='Open price')
+
+    ax2.yaxis.set_major_locator(mticker.MaxNLocator(nbins=7, prune='upper'))
+    ax2.grid(True)
 
     """ T18 Annotation example for last chart value in ax2"""
     bbox_props = dict(boxstyle='round',fc='w', ec='k',lw=1)
@@ -109,6 +112,7 @@ def graph_data(stock):
 
     ax3.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))     # set x axis display format
     ax3.xaxis.set_major_locator(mticker.MaxNLocator(10))                # set x axis number of appearing marks
+    ax3.yaxis.set_major_locator(mticker.MaxNLocator(nbins=4, prune='upper'))
 
     # Rotate label
     for label in ax2.xaxis.get_ticklabels():
@@ -122,7 +126,7 @@ def graph_data(stock):
                         right=0.92,
                         top=0.90,
                         wspace=0.2,         # wspace and hspace are padding between figures
-                        hspace=0)
+                        hspace=0.2)
     plt.show()
 
 
