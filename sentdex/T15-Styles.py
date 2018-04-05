@@ -90,12 +90,12 @@ def graph_data():
     # Fix specified values to Y axis
     # ax1.set_yticks([0, 120, 240, 360, 400, 500, 550, 660, 720])
 
-    """ T17 """
+    """ T17 Annotation example with arrow"""
     ax1.annotate('Bad News!',(date[15],openp[15]),                  # pointed location based on variables
                  xytext=(.605, .4), textcoords='axes fraction',     # xytexy (Xaxis, Yaxis in percentage
                  arrowprops=dict(facecolor='grey', color='grey'))   # warning is caused by "color"s property
 
-    """ T18 """
+    """ T18 Annotation example for last chart value"""
     bbox_props = dict(boxstyle='round',fc='w', ec='k',lw=1)
         # below we use positive values because the data plots in backward direction
     ax1.annotate(str(closep[1]), (date[1], closep[1]),              # 1st the text, 2nd the location
