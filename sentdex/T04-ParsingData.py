@@ -7,6 +7,11 @@
     6.1. Implement DataFrame from Pandas
     6.2. Try if value exists and append to DataFrame dictionary
     6.3. Save as csv
+    7.   Categorise data to outperform (1) and under-perform (0)
+    7.1. Our main data set is based on Yahoo Finance, but we want to combine it to another data set.
+         Got YAHOO-INDEX_GSPC.csv to do so.
+    7.2. Try/except added to check if one of the data is missing because no data collection made on Sat/Sun
+    7.3. Dataframe extended to compare price value and SP500 value
 
     https://pythonprogramming.net/getting-data-machine-learning/
 """
@@ -23,8 +28,11 @@ def Key_Stats(gather="Total Debt/Equity (mrq)"):
     statspath = path+"/_KeyStats"
     stock_list = [x[0] for x in os.walk(statspath)]     # create a path list to all folders
     # print(stock_list)
-    df = pd.DataFrame(columns = ['Date', 'Unix', 'Ticker', 'DE Ratio'])     # df - data frame
-    for each_dir in stock_list[1:]:                     # [1:] first stock list is initial pattern
+    df = pd.DataFrame(columns=['Date', 'Unix', 'Ticker', 'DE Ratio', 'Price', 'SP500'])     # df - data frame
+
+    sp500_df = pd.read_csv("YAHOO-INDEX_GSPC.csv", index_col=0, parse_dates=True)   # load csv into dataframe
+
+    for each_dir in stock_list[1:25]:                     # [1:] first stock list is initial pattern
         each_file = os.listdir(each_dir)
         ticker = each_dir.split('\\')[1]                # ticker is the stock folder name containing files
         if len(each_file) > 0:                          # ignore empty files
@@ -33,10 +41,10 @@ def Key_Stats(gather="Total Debt/Equity (mrq)"):
                 date_stamp = datetime.strptime(file, '%Y%m%d%H%M%S.html')   # save file name as date value
 
                 unix_time = time.mktime(date_stamp.timetuple())
-                print(date_stamp, unix_time)
+                # print(date_stamp, unix_time)
                 full_file_path = each_dir+'/'+file      # creates path to all files
-                print(full_file_path)
-                source = open(full_file_path, 'r').read()   # use urllib urlopen for url link
+                # print(full_file_path)
+                source = open(full_file_path, 'r').read()   # use urllib.request.urlopen for url link
                 # print(source)
 
                 """
@@ -50,14 +58,37 @@ def Key_Stats(gather="Total Debt/Equity (mrq)"):
                 """
                 try:
                     value = float(source.split(gather+':</td><td class="yfnc_tabledata1">')[1].split('</td>')[0])
-                    df = df.append({'Date':date_stamp,'Unix':unix_time,'Ticker':ticker,'DE Ratio':value,},
+
+                    """
+                        Try to check if data to compare exists. One data set contain data from Mon-Sun, second Mon-Fri.
+                        We will get date we want to look for and we will find a row where index equals to that date
+                    """
+                    try:
+                        sp500_date = datetime.fromtimestamp(unix_time).strftime('%Y-%m-%d')
+                        row = sp500_df[(sp500_df.index == sp500_date)]
+                        sp500_value = float(row["Adj Close"])
+                    except:
+                        sp500_date = datetime.fromtimestamp(unix_time-259200).strftime('%Y-%m-%d') # unix time -3 days
+                        row = sp500_df[(sp500_df.index == sp500_date)]
+                        sp500_value = float(row["Adj Close"])
+
+                    stock_price = float(source.split('</small><big><b>')[1].split('</b></big>&nbsp;&nbsp;')[0])
+                    # print("stock price:", stock_price, "ticker:", ticker)
+
+                    df = df.append({'Date': date_stamp,
+                                    'Unix': unix_time,
+                                    'Ticker': ticker,
+                                    'DE Ratio': value,
+                                    'Price': stock_price,
+                                    'SP500': sp500_value},
                                    ignore_index=True)
+
                 except Exception as e:
                     pass
 
     save = gather.replace(' ','').replace(')','').replace('(','').replace('/','')+('.csv')
     print(save)
-    df.to_csv(save  )
+    df.to_csv(save)
 
 
 Key_Stats()
