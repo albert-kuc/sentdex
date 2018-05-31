@@ -6,7 +6,7 @@
 import numpy as np
 import cv2
 
-img = cv2.imread("watch.jpg", 1)    # 1 = cv2.IMREAD_COLOR
+img = cv2.imread("images/watch.jpg", 1)    # 1 = cv2.IMREAD_COLOR
 
 # Line (where, start, end, color(BGR), width)
 cv2.line(img, (0, 0), (150, 150), (0, 255, 0), 5)

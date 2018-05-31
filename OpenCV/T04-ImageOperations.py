@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-img = cv2.imread("watch.jpg", cv2.IMREAD_COLOR)
+img = cv2.imread("images/watch.jpg", cv2.IMREAD_COLOR)
 
 # Print certain characteristic of image
 print(img.shape)
