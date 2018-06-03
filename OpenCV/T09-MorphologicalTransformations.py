@@ -1,5 +1,7 @@
 """
-    Overview of some frame filtering options
+    Overview of Morphological Transformations to remove white noise or noise from filters
+
+    https://pythonprogramming.net/morphological-transformation-python-opencv-tutorial/
 """
 
 import numpy as np
@@ -13,8 +15,8 @@ while True:
 
     # Not BRG any more.
     # hsv [hue sat light]
-    lower_orange = np.array([35, 80, 0])
-    upper_orange = np.array([95, 215, 255])
+    lower_orange = np.array([3, 160, 0])
+    upper_orange = np.array([14, 255, 255])
 
     # Mask - 0 or 1 depending on the following. Everything in range is 1.
     mask = cv2.inRange(hsv, lower_orange, upper_orange)
@@ -22,9 +24,15 @@ while True:
     # With bitwise operation every 1's in mask we will show color from the frame
     res = cv2.bitwise_and(frame, frame, mask=mask)
 
+    # Erosion and dilation
+    kernel = np.ones((5, 5), np.uint8)
+    erosion = cv2.erode(mask, kernel, iterations=1)
+    dilation = cv2.dilate(mask, kernel, iterations=1)
 
     cv2.imshow('frame', frame)
     cv2.imshow('res', res)
+    cv2.imshow('erosion', erosion)
+    cv2.imshow('dilation', dilation)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
