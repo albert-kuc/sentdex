@@ -29,10 +29,18 @@ while True:
     erosion = cv2.erode(mask, kernel, iterations=1)
     dilation = cv2.dilate(mask, kernel, iterations=1)
 
+    # Opening and Closing
+    # False positives are noises in background, and false negatives are noises in object
+    # Opening to remove false positives
+    opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+
     cv2.imshow('frame', frame)
     cv2.imshow('res', res)
     cv2.imshow('erosion', erosion)
     cv2.imshow('dilation', dilation)
+    cv2.imshow('opening', opening)
+    cv2.imshow('closing', closing)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
