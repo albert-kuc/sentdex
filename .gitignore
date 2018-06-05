@@ -1,2 +1,7 @@
-*.xml
+profiles_settings.xml
+markdown-navigator.xml
+misc.xml
+modules.xml
+vcs.xml
+workspace.xml
 *.iml
